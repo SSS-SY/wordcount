@@ -1,0 +1,4 @@
+./test/test3.c, 字符数: 59
+./test/test4.c, 字符数: 100
+./test/test5.c, 字符数: 63
+./test/test6.c, 字符数: 73
