@@ -1,0 +1,40 @@
+Merge branch 'src'
+
+merge src
+# Please enter a commit message to explain why this merge is necessary,
+# especially if it merges an updated upstream into a topic branch.
+#
+# Lines starting with '#' will be ignored, and an empty message aborts
+# the commit.
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	new file:   .DS_Store
+#	modified:   README.md
+#	new file:   result/result.txt
+#	new file:   result/result1.txt
+#	new file:   result/result2.txt
+#	new file:   result/result3.txt
+#	new file:   result/result4.txt
+#	new file:   result/result5.txt
+#	new file:   result/result6.txt
+#	new file:   result/result7.txt
+#	new file:   result/result8.txt
+#	new file:   result/result9.txt
+#	renamed:    wc.java -> src/wc.java
+#	new file:   test/test1.c
+#	new file:   test/test2.c
+#	new file:   test/test7.c
+#
