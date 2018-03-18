@@ -1,15 +1,11 @@
 /**
  * Created by SSS on 2018/3/18.
  */
+
 import java.io.*;
 import java.util.*;
 import java.lang.*;
 public class wc {
-    //提示出错
-    public static void error(String error) {
-        System.out.printf("error: %s\n", error);
-    }
-
     //参数设置
     private static class Args {
         boolean c = false;
@@ -150,6 +146,11 @@ public class wc {
             scanner.close();
         }
         return contents;
+    }
+
+    //提示出错
+    public static void error(String error) {
+        System.out.printf("error: %s\n", error);
     }
 
     //按字获取文件内容
