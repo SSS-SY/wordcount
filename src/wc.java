@@ -16,8 +16,12 @@ public class wc {
         boolean w = false;
         boolean l = false;
         boolean o = false;
-        String input;
-        String output;
+        boolean a = false;
+        boolean e = false;
+        boolean s =false;
+        String input=null;
+        String output=null;
+        String stop=null;
 
         Args(String[] args) {
             for (int i = 0; i < args.length; i++) {
@@ -44,6 +48,21 @@ public class wc {
                                 error("lacking path of out put file");
                             }
                             break;
+                        case 'a':
+                            this.a=true;
+                            break;
+                        case 's':
+                            this.s=true;
+                            break;
+                        case 'e':
+                            this.e=true;
+                            i++;
+                            if (i<args.length){
+                                this.stop = args[i];
+                            } else {
+                                error("lacking path of out put file");
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -54,12 +73,30 @@ public class wc {
         }
     }
 
+    //stop words:
+    private static Set<String> stopWords(String stopfile){
+        Set<String> s=new HashSet<>();
+        s.add("");
+        if (stopfile==null)
+            return s;
+        try {
+            String[] words = getWords(stopfile);
+            s.addAll(Arrays.asList(words));
+            return s;
+        } catch (Exception e) {
+            error("cannot read stopLists");
+            e.printStackTrace();
+        }
+        return s;
+    }
+
     //计算单词数
-    private static int wc(String contents) {
+    private static int wc(String contents,Set<String> stopLists) {
         int count = 0;
         String[] spStr = contents.split("[ ,]");
         for (String word : spStr) {
-            count++;
+            if(!stopLists.contains(word))
+                count++;
         }
         return count;
     }
@@ -143,23 +180,66 @@ public class wc {
             output.printf("%s, 字符数: %d\n", file, cc(contents));
         }
         if (args.w){
+            Set<String> stopwords=stopWords(args.stop);
             int words=0;
             for (String line:contents){
-                words+=wc(line);
+                words+=wc(line,stopwords);
             }
             output.printf("%s，单词数: %d\n",file,words);
         }
         if (args.l){
             output.printf("%s，行数: %d\n",file,contents.length);
         }
+        if (args.a){
+            int[] lines=cl(contents);
+            output.printf("%s, 代码行／空行／注释行: %d/%d/%d\n",file,lines[0],lines[1],lines[2]);
+        }
+    }
+
+    //递归寻找文件
+    private static String[] findFiles(String path,boolean s){
+        File fp = new File(path);
+        int idx = path.lastIndexOf('/');
+        String dirpath, filename;
+        ArrayList<String> sal = new ArrayList<>();
+        if(fp.isDirectory()) {
+            for(File f : fp.listFiles()) {
+                if(f.isFile()) {
+                    sal.add(f.getPath());
+                } else if(f.isDirectory() && s) {
+                    sal.addAll(Arrays.asList(findFiles(f.getPath(), s)));
+                }
+            }
+        }
+        else {
+            if(idx > 0) {
+                dirpath = "./" + path.substring(0, idx+1);
+                filename = path.substring(idx+1, path.length());
+            }
+            else {
+                dirpath = "./";
+                filename = path;
+            }
+            if(filename.contains("*")) {
+                filename = filename.replaceAll("\\*", "\\\\w*");
+            }
+            File[] fs = (new File(dirpath)).listFiles();
+            assert fs != null;
+            for (File f : fs) {
+                if(f.getName().matches(filename) && f.isFile()) {
+                    sal.add(dirpath + f.getName());
+                }
+            }
+        }
+        return sal.toArray(new String[sal.size()]);
     }
 
     public static void main(String[] args){
-        String[] args2=new String[]{"wc.exe","-c","test.txt"};
-        Args args1=new Args(args2);
+        Args args1=new Args(args);
         String output="result.txt";
         if (args1.input==null){
-            error("please input name of inputFile");
+            error("please input the name of inputFile");
+            return;
         }
         //修改输出文件
         if (args1.o){
@@ -173,7 +253,9 @@ public class wc {
             }
             //输出到文件
             PrintWriter out=new PrintWriter(output);
-            ptintResultToFile(args1.input,args1,out);
+            String[] filLists=findFiles(args1.input,args1.s);
+            for(String f:filLists)
+                ptintResultToFile(f,args1,out);
             out.close();
         }catch (Exception e){
             e.printStackTrace();
