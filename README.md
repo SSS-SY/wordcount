@@ -30,7 +30,7 @@ Reporting|报告|60|85
 
 （2）语言：java
 
-（3）博客地址：
+（3）博客地址：http://www.cnblogs.com/tsssy/
 
 <h2>3 测试用例</h2>
 
@@ -64,26 +64,29 @@ result文件夹中：
 
 <h2>5 解题思路</h2>
 
-* 创建Args类实现对功能的选择
+* 对于参数功能选择设置HashMap存储-o -e -i文件路径，在输出文件时根据HashMap是否包含c、w、l、a判定输处内容
 * 基本功能比较简单，只需读取文件内容后分别按行、按单词、按字符循环统计总数即可
-* 对输出文件只需判断是否有选择输出文件然后修改Args的参数output即可
+* 对输出文件只需判断是否有选择输出文件然后修改output路径即可
 * 对于-e StopLists只需读取文件内容以后创建Hash表然后统计字数时先判断是否在Hash表中即可
-* 对于-a功能在统计字符数时使用trim()函数判断blank，使用contains()判断comments，其余情况即可视为code
+* 对于-a功能在统计字符数时使用trim()函数判断blank，使用contains()判断comments，其余情况即可视为code：
+	* ***对于空白行只要trim()后该行总长度不超过1即为空白行***
+	* ***对于代码行：不包含//注释符即为代码行***
+	* ***除去以上两种情况以后包含//即为注释行***
 * 对于-s功能递归处理输入文件列表然后在输出时循环调用输出功能结果功能即可
 
 <h2>6 程序实现过程</h2>
 
 * 查阅资料实现读取以及文件输出
-* 实现基本功能
-* 实现-e功能
-* 实现-a功能
-* 实现-s功能
+* 设计HashMap实现参数解析
+* 实现基本功能：
+	* countLine:按行读取文件内容时统计行数
+	* wordCount：按字读取文件内容后使用split()，标识为空格和‘，’
+	* charCount：按行读取文件内容后累加每行length
+* 实现-e功能：设置Hash表后在统计字数时预先判定是否在hash表中
+* 实现-a功能：根据解题思路计算代码、空白以及注释行数
+* 实现-s功能：递归实现 searchFiles
 
 <h2>7 代码说明</h2>
-
-//参数设置
-
-private static class Args
 
 //计算单词数
 
@@ -99,6 +102,7 @@ private static int cc(String[] contents)
 
 //stop words:
 　　
+
 private static Set<String> stopWords(String stopfile)
 
 //按行获取文件内容
@@ -116,6 +120,10 @@ private static void ptintResultToFile(String file,Args args,PrintWriter output)
 //递归寻找文件
 
 private static String[] findFiles(String path,boolean s)
+
+//参数设置
+
+private static HashMap<Character, String> parseArgs(String[] args) 
 
 <h2>8 参考文献链接</h2>
 
